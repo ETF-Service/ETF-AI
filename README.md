@@ -4,10 +4,13 @@
 ## 목차
 1. **서비스 제안 배경 및 필요성**
 <br/>
+
 2. **환경 설정**
 <br/>
+
 3. **프로토타입 설명**
 <br/>
+
 4. **팀 구성**
 <br/><br/>
 
@@ -68,7 +71,7 @@
 ### ▶ Chrome Browser Download
 <br/><br/>
 
-``` python
+```
 wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.92/linux64/chrome-linux64.zip
 wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.92/linux64/chromedriver-linux64.zip
 unzip https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.92/linux64/chrome-linux64.zip
