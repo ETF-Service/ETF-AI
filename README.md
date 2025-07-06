@@ -69,7 +69,7 @@
 <br/><br/>
 
 ### ▶ Chrome Browser Download
-<br/><br/>
+<br/>
 
 ```
 wget https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.92/linux64/chrome-linux64.zip
@@ -86,10 +86,31 @@ unzip https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.92/lin
 ```
 unzip https://storage.googleapis.com/chrome-for-testing-public/138.0.7204.92/linux64/chromedriver-linux64.zip
 ```
+<br/><br/>
 
+### ▶ Chrome Browser 파일 경로 변경
+<br/>
 
+## 방법 1.
+<br/>
 
+아래와 같이 브라우저 및 드라이버의 경로를 바꿔야 합니다.
 
+```
+"/usr/local/bin/chromedriver"  # ChromeDriver 경로
+"/usr/bin/google-chrome"  # Chrome 브라우저 경로
+```
+<br/><br/>
+
+## 방법 2.
+<br/>
+
+아래와 같이 브라우저 및 드라이버를 사용자 설정에 맞게 바꿔야 합니다.
+chromedriver_path, chrome_path 변수는 function.py에 존재합니다.
+```
+chromedriver_path = "/usr/local/bin/chromedriver"  # ChromeDriver 경로
+chrome_path = "/usr/bin/google-chrome"  # Chrome 브라우저 경로
+```
 
 
 
