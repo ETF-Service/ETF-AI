@@ -1,4 +1,5 @@
 # "적립식 투자자"를 위한 전략적 ETF 투자 서비스
+![image](https://github.com/user-attachments/assets/40b0d03a-3a07-4742-84ac-c497f6dcff97)
 <br/><br/>
 
 ## 목차
