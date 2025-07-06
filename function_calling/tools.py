@@ -16,11 +16,11 @@ tools = [
                     },
                     "start": {
                         "type": "string",
-                        "description": "원하는 시작 일자. 예를 들어, '2025-06-20'이런 식으로 입력이 되어야 함."
+                        "description": "원하는 시작 일자. 예를 들어, '2025-06-20'이런 식으로 입력이 되어야 함. 주말은 안 나오니까 주의"
                     },
                     "end": {
                         "type": "string",
-                        "description": "원하는 종료 일자 + 1일. 예를 들어, 25년 6월 28일의 정보까지 보고싶으면 '2025-06-29'이런 식으로 입력이 되어야 함. 또한, 25년 6월 30까지의 정보를 보고싶으면 '2025-07-01'로 입력해야함."
+                        "description": "원하는 종료 일자 + 1일. 예를 들어, 25년 6월 28일의 정보까지 보고싶으면 '2025-06-29'이런 식으로 입력이 되어야 함. 또한, 25년 6월 30까지의 정보를 보고싶으면 '2025-07-01'로 입력해야함. 주말은 안 나오니까 주의"
                     },
                 },
                 "required": ["symbols", "start", "end"],
@@ -33,7 +33,7 @@ tools = [
         "type": "function",
         "function": {
             "name": "get_finance_analized",
-            "description": "입력된 야후 finance 심볼들(예시로 AAPL)에 대해 투자 분석가들이 내놓은 의견이야. strongbuy, buy, hold, sell, strongsell로 나눠지고, 각각에 대한 의견 수를 제시해.",
+            "description": "입력된 야후 finance 심볼들(예시로 AAPL)에 대해 투자 분석가들이 내놓은 간략한 의견이야.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -55,7 +55,7 @@ tools = [
         "type": "function",
         "function": {
             "name": "get_financial",
-            "description": "입력된 야후 finance 심볼들(예시로 AAPL)에 대한 재무제표야.",
+            "description": "입력된 야후 finance 심볼들에 대한 재무제표야.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -96,13 +96,13 @@ tools = [
         "type": "function",
         "function": {
             "name": "Korea_Bank_News_Text",
-            "description": "원하는 정보 수를 입력받아 한국은행에서 제공하는 현지정보, 동향분석 텍스트를 받아오는 함수.",
+            "description": "최근 ETF 관련 정보를 분석하기 위해 한국은행에서 제공하는 현지정보, 동향분석 텍스트를 받아오는 함수야.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "page": {
                         "type": "number",
-                        "description": "몇 페이지까지 크롤링할지 정하는 변수. 아무 말이 없으면 5로 입력됨."
+                        "description": "몇 페이지까지 크롤링할지 정하는 변수."
                     },
                 },
                 "required": ["page"],

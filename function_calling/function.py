@@ -87,6 +87,8 @@ def get_financial(symbols):
     for symbol in symbols:
         data = {}
         df = yf.Ticker(symbol).financials
+        if df.empty:
+            continue
         columns = df.columns.tolist()
         indexes = df.index.tolist()
 
@@ -191,25 +193,28 @@ def Korea_Bank_News_Text(page=5):
 
     for link in direction_links:
         info = {}
-        driver.get(link)
-        html = driver.page_source
-        soup = BeautifulSoup(html, "html.parser")
-        item = soup.select_one(".down > dd > ul > li > a")
+        try:
+            driver.get(link)
+            html = driver.page_source
+            soup = BeautifulSoup(html, "html.parser")
+            item = soup.select_one(".down > dd > ul > li > a")
 
-        pdf_type = "동향 분석"
-        pdf_link = "https://www.bok.or.kr" + item["href"]
-        pdf_title = item["title"][:item["title"].rfind(".")]
-        response = requests.get(pdf_link)
+            pdf_type = "동향 분석"
+            pdf_link = "https://www.bok.or.kr" + item["href"]
+            pdf_title = item["title"][:item["title"].rfind(".")]
+            response = requests.get(pdf_link)
 
-        # 예외처리
-        response.raise_for_status()
+            # 예외처리
+            response.raise_for_status()
 
-        doc = fitz.open(stream=BytesIO(response.content), filetype="pdf")
-        text = "\n".join(page.get_text() for page in doc)
+            doc = fitz.open(stream=BytesIO(response.content), filetype="pdf")
+            text = "\n".join(page.get_text() for page in doc)
 
-        info["type"] = pdf_type
-        info[pdf_title] = del_chinese(text[:1000].replace("\n", ""))
-        infos.append(info)
+            info["type"] = pdf_type
+            info[pdf_title] = del_chinese(text[:1000].replace("\n", ""))
+            infos.append(info)
+        except requests.HTTPError as e:
+            continue
     
     driver.quit()
     
@@ -218,7 +223,7 @@ def Korea_Bank_News_Text(page=5):
 def Korea_Bank_News_Links(page=5):
     # ChromeDriver 경로 명시
     chromedriver_path = "/usr/local/bin/chromedriver"  # ChromeDriver 경로
-    chrome_path = "/usr/bin/google-chrome"  # Chrome 브라우저 경로 (시스템에 따라 다를 수 있음)
+    chrome_path = "/usr/bin/google-chrome"  # Chrome 브라우저 경로
 
     # Chrome 옵션 설정
     options = Options()

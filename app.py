@@ -105,7 +105,7 @@ if prompt := st.chat_input("금융 정보에 대해 질문하세요!"):
         st.write(prompt)
 
     with st.chat_message("assistant"):
-        stream, messages = create_response(st.session_state.messages, st.session_state.api_key, st.session_state.model_type)
+        stream, st.session_state.messages = create_response(st.session_state.messages, st.session_state.api_key, st.session_state.model_type)
         response = st.write_stream(stream)
 
     st.session_state.messages.append(
@@ -114,4 +114,3 @@ if prompt := st.chat_input("금융 정보에 대해 질문하세요!"):
             "content": response
         }
     )
-
