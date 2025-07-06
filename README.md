@@ -111,7 +111,14 @@ chromedriver_path, chrome_path 변수는 function.py에 존재합니다.
 chromedriver_path = "/usr/local/bin/chromedriver"  # ChromeDriver 경로
 chrome_path = "/usr/bin/google-chrome"  # Chrome 브라우저 경로
 ```
+<br/><br/>
 
+### ▶ APP 실행
+<br/>
+
+```
+streamlit run app.py
+```
 
 
 
