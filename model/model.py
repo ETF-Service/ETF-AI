@@ -7,6 +7,7 @@ import warnings
 import json
 warnings.filterwarnings('ignore')
 
+# 고객의 금융 관련 질문에 대한 응답을 제공하는 함수.
 def create_response(messages, api_key, model_type):
     # 클라이언트 설정 (기존 코드와 동일)
     if model_type == "Clova X":
@@ -88,7 +89,7 @@ def create_response(messages, api_key, model_type):
     
     return response, messages
 
-# 실시간 뉴스 분석해주는 함수.
+# 실시간으로 고객이 투자하는 ETF 상품 및 추가로 투자할 만한 가치가 있는 ETF 추천하는 모델 생성.
 def analyze_sentiment(messages, api_key, model_type):
     # 클라이언트 설정 (기존 코드와 동일)
     if model_type == "Clova X":

@@ -22,8 +22,9 @@ cond2 = "model_type" in st.session_state
 cond3 = "user_name" in st.session_state
 cond4 = "invest_type" in st.session_state
 cond5 = "interest" in st.session_state
+cond6 = "invest_price" in st.session_state
 
-if "messages" not in st.session_state and cond1 and cond2 and cond3 and cond4 and cond5 and st.session_state.sidebar_collapsed:
+if "messages" not in st.session_state and cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and len(st.session_state.interest) == len(st.session_state.invest_price) and st.session_state.sidebar_collapsed:
     print(st.session_state.invest_type)
     print(st.session_state.user_name)
     print(st.session_state.interest)
@@ -82,6 +83,19 @@ with st.sidebar:
         options=data
     )
 
+    if st.session_state.interest:
+        for interest in st.session_state.interest:
+            col1, col2 = st.columns(2)
+            with col1:
+                st.write(f"{interest}: ")
+            with col2:
+                invest_price = st.text_input("**월 적립 금액**", key=f"interest {interest}")
+                
+                if "invest_price" not in st.session_state:
+                    st.session_state.invest_price = []
+
+                st.session_state.invest_price.append(invest_price)
+
     if st.button("저장"):
         st.session_state.sidebar_collapsed = True
         st.rerun()
@@ -136,12 +150,14 @@ if st.session_state.alarm:
         analyze_messages = [
             {
                 "role": "developer",
-                "content": analyze_instructions(st.session_state.user_name, st.session_state.invest_type, st.session_state.interest)
+                "content": analyze_instructions(st.session_state.user_name, st.session_state.invest_type, st.session_state.interest, st.session_state.invest_price)
             },
             {
                 "role": "user",
-                "content": "네이버 최근 뉴스랑 한국은행에서 제공하는 정보를 통해서\
-                    지금 내가 투자하고 있는 상품중에 적립식 투자를 더 올리거나 말아야 할 상품 있어? 아니면 더 추가될 만한 상품 있니? 최대 2줄로 근거는 말하지 말고, 확실하게 답해줘."
+                "content": "네이버 최근 뉴스랑 한국은행에서 제공하는 정보를 분석해서\
+                            지금 내가 투자하고 있는 상품중에 적립식 투자 비율을 바꿔야 할까?\
+                            최대 2줄로 작성해서 요약해줘. 확실하게 답해줘.\
+                            그리고 내가 현재 투자하는 금액을 바탕으로 말해줘."
             }
         ]
         response = analyze_sentiment(analyze_messages, st.session_state.api_key, st.session_state.model_type)
