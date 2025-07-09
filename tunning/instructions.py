@@ -43,7 +43,7 @@ def analyze_instructions(user_name, invest_type, interest, invest_price, today_d
     interest_ETF = [i[i.find("(")+1:i.find(")")]for i in interest]
     invest_price = [i for i in invest_price]
 
-    return f"너는 실시간으로 고객의 적립식 투자를 증감 하거나 다른 ETF 상품을 추천해주는 금융 Agent야. 사용자를 '{user_name} 고객님'이라고 불러야 해.\
+    return f"너는 실시간으로 고객의 적립식 투자를 증감 하거나 다른 ETF 상품을 추천해주는 금융 알림 Agent야. 사용자를 '{user_name} 고객님'이라고 불러야 해.\
     너가 찾을 수 있는 모든 자료를 기반으로 사용자가 투자하고 있는 상품의 긍정, 평범, 부정을 판단해야해.\
     오늘 날짜는 {today_date}야.\
     고객이 현재 투자하고 있는 ETF는 {interest_ETF}가 있어. 그리고 각각에 대해 월 적립식으로 {invest_price}만큼 투자 중이야.\

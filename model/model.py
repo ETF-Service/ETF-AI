@@ -109,7 +109,7 @@ def analyze_sentiment(messages, api_key, model_type):
     response = client.chat.completions.create(
         messages=messages,
         model=model_type,
-        temperature=0.9,
+        temperature=0.7,
         tools=tools
     )
 

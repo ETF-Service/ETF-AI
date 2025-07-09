@@ -149,7 +149,7 @@ if st.session_state.alarm:
             {
                 "role": "user",
                 "content": "네이버 최근 뉴스랑 한국은행에서 제공하는 정보를 분석해서\
-                            지금 내가 투자하고 있는 상품중에 적립식 투자 비율을 바꿔야 할까?\
+                            지금 내 ETF 상품중에 적립식 투자 비율을 조정해야 하는 것이 있어?\
                             최대 2줄로 작성해서 요약해줘. 확실하게 답해줘.\
                             그리고 내가 현재 투자하는 금액을 바탕으로 말해줘."
             }
@@ -158,7 +158,8 @@ if st.session_state.alarm:
         if len(prev_response) != 0:
             # 코사인 유사도 측정
             similarity = cosine_sim(prev_response[-1], response[0])
-            if similarity < 0.55:
+            # 코사인 유사도가 일정 수준보다 낮게 나온다면 알림 보내기.
+            if similarity < 0.5:
                 prev_response.append(response)
                 with st.chat_message("assistant"):
                     st.write(response[0])
