@@ -7,9 +7,10 @@ import warnings
 import json
 warnings.filterwarnings('ignore')
 
-# 고객의 금융 관련 질문에 대한 응답을 제공하는 함수.
-def create_response(messages, api_key, model_type):
+# client 생성.
+def create_client(api_key, model_type):
     # 클라이언트 설정 (기존 코드와 동일)
+    # Clova의 경우 OpenAI API Client 설정이 다름.
     if model_type == "Clova X":
         model_type = "HCX-005"
         client = OpenAI(
@@ -18,17 +19,37 @@ def create_response(messages, api_key, model_type):
         )
     else:
         client = OpenAI(api_key=api_key)
+    
+    return client, model_type
 
-    Model = model_type
+def function_calling(function_name, args):
+    if function_name == "get_finance_info":
+        output = get_finance_info(args["symbols"], args["start"], args["end"])
+    elif function_name == "get_finance_analized":
+        output = get_finance_analized(args["symbols"])
+    elif function_name == "get_financial":
+        output = get_financial(args["symbols"])
+    elif function_name == "bring_recent_news_naver":
+        output = bring_recent_news_naver(args["top_n"])
+    elif function_name == "Korea_Bank_News_Text":
+        output = Korea_Bank_News_Text()
+    else:
+        output = None
+    
+    return output
+
+# 고객의 금융 관련 질문에 대한 응답을 제공하는 함수.(chat bot)
+def create_response(messages, api_key, model_type):
+    client, model_type = create_client(api_key, model_type)
 
     response = client.chat.completions.create(
         messages=messages,
-        model=Model,
+        model=model_type,
         temperature=0.9,
         tools=tools
     )
 
-    # tool_calls가 있는 경우 이를 처리
+    # 모델이 함수를 호출하면 실행.
     if response.choices[0].finish_reason == "tool_calls":
         for tool in response.choices[0].message.tool_calls or []:
             args = json.loads(tool.function.arguments)
@@ -36,17 +57,8 @@ def create_response(messages, api_key, model_type):
             # 각 tool에 대한 처리 (함수 호출 후 메시지 업데이트)
             output = None
             try:
-                if tool.function.name == "get_finance_info":
-                    output = get_finance_info(args["symbols"], args["start"], args["end"])
-                elif tool.function.name == "get_finance_analized":
-                    output = get_finance_analized(args["symbols"])
-                elif tool.function.name == "get_financial":
-                    output = get_financial(args["symbols"])
-                elif tool.function.name == "bring_recent_news_naver":
-                    output = bring_recent_news_naver(args["top_n"])
-                elif tool.function.name == "Korea_Bank_News_Text":
-                    output = Korea_Bank_News_Text()
-
+                # Function Calling
+                output = function_calling(tool.function.name, args)
             except Exception as e:
                 output = f"⚠️ 함수 실행 중 오류 발생: {str(e)}"
 
@@ -76,10 +88,11 @@ def create_response(messages, api_key, model_type):
                     }
                 )
 
-    # 스트리밍을 활성화한 호출
+    # 스트리밍을 활성화한 호출.
+    # tools를 기입하지 않음.
     response = client.chat.completions.create(
         messages=messages,
-        model=Model,
+        model=model_type,
         temperature=0.9,
         stream=True
     )
@@ -89,23 +102,13 @@ def create_response(messages, api_key, model_type):
     
     return response, messages
 
-# 실시간으로 고객이 투자하는 ETF 상품 및 추가로 투자할 만한 가치가 있는 ETF 추천하는 모델 생성.
+# 실시간으로 고객이 투자하는 ETF 상품 및 추가로 투자할 만한 가치가 있는 ETF 추천하는 모델 생성.(chat alarm)
 def analyze_sentiment(messages, api_key, model_type):
-    # 클라이언트 설정 (기존 코드와 동일)
-    if model_type == "Clova X":
-        model_type = "HCX-005"
-        client = OpenAI(
-            api_key=api_key,
-            base_url="https://clovastudio.stream.ntruss.com/v1/openai"
-        )
-    else:
-        client = OpenAI(api_key=api_key)
-
-    Model = model_type
+    client, model_type = create_client(api_key, model_type)
 
     response = client.chat.completions.create(
         messages=messages,
-        model=Model,
+        model=model_type,
         temperature=0.9,
         tools=tools
     )
@@ -118,17 +121,8 @@ def analyze_sentiment(messages, api_key, model_type):
             # 각 tool에 대한 처리 (함수 호출 후 메시지 업데이트)
             output = None
             try:
-                if tool.function.name == "get_finance_info":
-                    output = get_finance_info(args["symbols"], args["start"], args["end"])
-                elif tool.function.name == "get_finance_analized":
-                    output = get_finance_analized(args["symbols"])
-                elif tool.function.name == "get_financial":
-                    output = get_financial(args["symbols"])
-                elif tool.function.name == "bring_recent_news_naver":
-                    output = bring_recent_news_naver(args["top_n"])
-                elif tool.function.name == "Korea_Bank_News_Text":
-                    output = Korea_Bank_News_Text()
-
+                # Function Calling
+                output = function_calling(tool.function.name, args)
             except Exception as e:
                 output = f"⚠️ 함수 실행 중 오류 발생: {str(e)}"
 
@@ -158,10 +152,11 @@ def analyze_sentiment(messages, api_key, model_type):
                     }
                 )
 
-    # 스트리밍을 활성화한 호출
+    # 스트리밍을 활성화한 호출.
+    # tools를 기입하지 않음.
     response = client.chat.completions.create(
         messages=messages,
-        model=Model,
+        model=model_type,
         temperature=0.9,
     )
 
@@ -169,14 +164,17 @@ def analyze_sentiment(messages, api_key, model_type):
 
     return response, messages
 
-# 두 문장의 코사인 유사도 확인하는 함수
-# 모델은 허깅페이스를 이용함.
+# 두 문장의 코사인 유사도 확인하는 함수.
+# 허깅페이스 API를 이용함.
 def cosine_sim(sent1, sent2):
     print(sent2)
     model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
+    # 각 문장 인코딩
     sent1_encode = model.encode([sent1])
     sent2_encode = model.encode([sent2])
+
+    # 코사인 유사도 확인.
     similarity = cosine_similarity(sent1_encode, sent2_encode)
     print(similarity)
 

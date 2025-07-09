@@ -2,16 +2,10 @@ import streamlit as st
 import time
 from model.model import create_response, analyze_sentiment, cosine_sim
 from tunning.instructions import instructions, analyze_instructions
+import data
 
-# ETF
-data = [
-    "미국s&p500(SPY)",
-    "미국_나스닥(QQQ)",
-    "한국(EWY)",
-    "일본(EWJ)",
-    "중국(MCHI)",
-    "유럽(VGK)"
-]
+# 고객이 선택할 ETF 상품.(현재 모델이 제공하는 ETF 상품들)
+ETF = data.ETF
 
 if "sidebar_collapsed" not in st.session_state:
     st.session_state.sidebar_collapsed = False
@@ -24,7 +18,7 @@ cond4 = "invest_type" in st.session_state
 cond5 = "interest" in st.session_state
 cond6 = "invest_price" in st.session_state
 
-if "messages" not in st.session_state and cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and len(st.session_state.interest) == len(st.session_state.invest_price) and st.session_state.sidebar_collapsed:
+if "messages" not in st.session_state and cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and len(st.session_state.interest) == len(st.session_state.invest_price) and not st.session_state.sidebar_collapsed:
     print(st.session_state.invest_type)
     print(st.session_state.user_name)
     print(st.session_state.interest)
@@ -80,7 +74,7 @@ with st.sidebar:
     st.session_state.interest = st.multiselect(
         "**현재 투자하고 있는 ETF**",
         key="visibility",
-        options=data
+        options=ETF
     )
 
     if st.session_state.interest:
