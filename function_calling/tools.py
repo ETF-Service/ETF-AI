@@ -76,8 +76,27 @@ tools = [
     {
         "type": "function",
         "function": {
-            "name": "bring_recent_news_naver",
-            "description": "네이버 글로벌 경제 뉴스에서 원하는 만큼 최근 뉴스를 가지고 오는 함수야. 이 함수는 실시간으로 적용되어야 하기 때문에 필요시 지속적으로 함수를 불러야 해.",
+            "name": "bring_recent_news_naver_global",
+            "description": "네이버 글로벌 경제 뉴스에서 최근 뉴스를 가지고 오는 함수야. 이 함수는 실시간으로 적용되어야 하기 때문에 필요시 지속적으로 함수를 불러야 해.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "top_n": {
+                        "type": "number",
+                        "description": "몇개의 최신 뉴스를 검색할 지 입력받는 변수."
+                    },
+                },
+                "required": ["top_n"],
+                "additionalProperties": False,
+            },
+            "strict": True
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "bring_recent_news_naver_korea",
+            "description": "네이버 한국 경제 뉴스에서 최근 뉴스를 가지고 오는 함수야. 이 함수는 실시간으로 적용되어야 하기 때문에 필요시 지속적으로 함수를 불러야 해.",
             "parameters": {
                 "type": "object",
                 "properties": {

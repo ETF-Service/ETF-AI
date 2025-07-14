@@ -1,4 +1,5 @@
 import streamlit as st
+import datetime
 import time
 from model.model import create_response, analyze_sentiment, cosine_sim
 from tunning.instructions import instructions, analyze_instructions
@@ -17,8 +18,9 @@ cond3 = "user_name" in st.session_state
 cond4 = "invest_type" in st.session_state
 cond5 = "interest" in st.session_state
 cond6 = "invest_price" in st.session_state
+cond7 = "invest_infos" in st.session_state
 
-if "messages" not in st.session_state and cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and len(st.session_state.interest) == len(st.session_state.invest_price) and not st.session_state.sidebar_collapsed:
+if "messages" not in st.session_state and cond1 and cond2 and cond3 and cond4 and cond5 and cond6 and cond7 and len(st.session_state.interest) == len(st.session_state.invest_price) and not st.session_state.sidebar_collapsed:
     print(st.session_state.invest_type)
     print(st.session_state.user_name)
     print(st.session_state.interest)
@@ -79,16 +81,38 @@ with st.sidebar:
 
     if st.session_state.interest:
         for interest in st.session_state.interest:
-            col1, col2 = st.columns(2)
-            with col1:
-                st.write(f"{interest}: ")
-            with col2:
-                invest_price = st.text_input("**월 적립 금액**", key=f"interest {interest}")
-                
-                if "invest_price" not in st.session_state:
-                    st.session_state.invest_price = []
+            st.write(f"**{interest}**")
 
-                st.session_state.invest_price.append(invest_price)
+            frequency = st.radio("투자 주기를 선택하세요:", ["매일", "매주", "매월"], horizontal=True, key=f"frequency {interest}")
+            if frequency == "매일":
+                cycle = "매일"
+                duration = st.number_input("투자 기간 (연)", min_value=1, step=1, key = f"duration {interest}")
+                invest_price = st.text_input("**일 적립 금액**", key=f"interest {interest}")
+            elif frequency == "매주":
+                cycle = st.selectbox("투자 요일", ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"], key = f"cycle {interest}")
+                duration = st.number_input("투자 기간 (연)", min_value=1, step=1, key = f"duration {interest}")
+                invest_price = st.text_input("**주 적립 금액**", key=f"interest {interest}")
+            else:
+                cycle = st.number_input("투자 일자", min_value=1, max_value=31, step=1, key = f"cycle {interest}")
+                duration = st.number_input("투자 기간 (연)", min_value=1, step=1, key = f"duration {interest}")
+                invest_price = st.text_input("**월 적립 금액**", key=f"interest {interest}")
+            
+            invest_info = {
+                "frequency": frequency,
+                "cycle": cycle,
+                "duration": duration,
+                "invest_price": invest_price
+            }
+            
+            if "invest_infos" not in st.session_state:
+                st.session_state.invest_infos = {}
+
+            st.session_state.invest_infos[interest] = invest_info
+
+            if "invest_price" not in st.session_state:
+                st.session_state.invest_price = []
+
+            st.session_state.invest_price.append(invest_price)
 
     if st.button("저장"):
         st.session_state.sidebar_collapsed = True
@@ -141,20 +165,40 @@ if st.session_state.alarm:
     prev_response = []
 
     while True:
+        week_days = {0: '월요일', 1: '화요일', 2: '수요일', 3: '목요일', 4: '금요일', 5: '토요일', 6: '일요일'}
+        now = datetime.datetime.now()
+        now_weekday = week_days[datetime.date.today().weekday()]
+
+        today_ETF = []
+        today_ETF_invest_price = []
+
+        for invest_name in st.session_state.invest_infos:
+            invest_info = st.session_state.invest_infos[invest_name]
+            if invest_info["frequency"] == "매일":
+                today_ETF.append(invest_name)
+                today_ETF_invest_price.append(invest_info["invest_price"])
+            elif invest_info["frequency"] == "매주" and invest_info["cycle"] == now_weekday:
+                today_ETF.append(invest_name)
+                today_ETF_invest_price.append(invest_info["invest_price"])
+            elif invest_info["frequency"] == "매월" and invest_info["cycle"] == now.day:
+                today_ETF.append(invest_name)
+                today_ETF_invest_price.append(invest_info["invest_price"])
+
         analyze_messages = [
             {
                 "role": "developer",
-                "content": analyze_instructions(st.session_state.user_name, st.session_state.invest_type, st.session_state.interest, st.session_state.invest_price)
+                "content": analyze_instructions(st.session_state.user_name, st.session_state.invest_type, st.session_state.interest, st.session_state.invest_price, st.session_state.invest_infos)
             },
             {
                 "role": "user",
-                "content": "네이버 최근 뉴스랑 한국은행에서 제공하는 정보를 분석해서\
-                            지금 내 ETF 상품중에 적립식 투자 비율을 조정해야 하는 것이 있어?\
-                            최대 2줄로 작성해서 요약해줘. 확실하게 답해줘.\
-                            그리고 내가 현재 투자하는 금액을 바탕으로 말해줘."
+                "content": f"네이버 글로벌 경제 뉴스, 네이버 한국 경제 뉴스, 한국은행에서 제공하는 정보 3가지를 모두 분석해줘.\
+                            지금 나는 {today_ETF} ETF에 각각 {today_ETF_invest_price}원씩 투자하고 있어. 투자 비율을 조정해야 하는 것이 있어?\
+                            요약만 간결하게 해서 상품에 투자 비중을 정해서 최종 금액을 도출해줘."
             }
         ]
+
         response = analyze_sentiment(analyze_messages, st.session_state.api_key, st.session_state.model_type)
+
         if len(prev_response) != 0:
             # 코사인 유사도 측정
             similarity = cosine_sim(prev_response[-1], response[0])

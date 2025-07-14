@@ -29,8 +29,10 @@ def function_calling(function_name, args):
         output = get_finance_analized(args["symbols"])
     elif function_name == "get_financial":
         output = get_financial(args["symbols"])
-    elif function_name == "bring_recent_news_naver":
-        output = bring_recent_news_naver(args["top_n"])
+    elif function_name == "bring_recent_news_naver_global":
+        output = bring_recent_news_naver_global(args["top_n"])
+    elif function_name == "bring_recent_news_naver_korea":
+        output = bring_recent_news_naver_korea(args["top_n"])
     elif function_name == "Korea_Bank_News_Text":
         output = Korea_Bank_News_Text()
     else:
@@ -109,7 +111,7 @@ def analyze_sentiment(messages, api_key, model_type):
     response = client.chat.completions.create(
         messages=messages,
         model=model_type,
-        temperature=0.7,
+        temperature=0.65,
         tools=tools
     )
 

@@ -105,9 +105,9 @@ def get_financial(symbols):
 ########################################################################################################################################################################
 
 # 네이버에서 최근 글로벌 경제 뉴스를 가져오는 함수.
-def bring_recent_news_naver(top_n=30):
-    print("bring_recent_news_naver")
-    links, titles = bring_recent_news_links_naver(top_n=top_n)
+def bring_recent_news_naver_global(top_n=30):
+    print("bring_recent_news_naver_global")
+    links, titles = bring_recent_news_links_naver_global(top_n=top_n)
     infos = {}
 
     for link, title in zip(links, titles):
@@ -134,8 +134,67 @@ def bring_recent_news_naver(top_n=30):
 
     return infos
 
-def bring_recent_news_links_naver(top_n=30):
+def bring_recent_news_links_naver_global(top_n=30):
     url = "https://news.naver.com/breakingnews/section/101/262"
+
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
+
+    response = requests.get(url, headers=headers)
+    html = response.text
+    soup = BeautifulSoup(html, "html.parser")
+    link_items = soup.select(".sa_text > a")
+    title_items = soup.select(".sa_text_strong")
+    links = []
+    titles = []
+
+    for i, link_item in enumerate(link_items):
+        if i >= top_n:
+            break
+        links.append(link_item['href'])
+
+    for i, title_item in enumerate(title_items):
+        if i >= top_n:
+            break
+        titles.append(title_item.text)
+
+    return links, titles
+
+########################################################################################################################################################################
+
+# 네이버 최근 한국 경제 뉴스 가져오는 함수.
+def bring_recent_news_naver_korea(top_n=30):
+    print("bring_recent_news_naver_korea")
+    links, titles = bring_recent_news_links_naver_korea(top_n=top_n)
+    infos = {}
+
+    for link, title in zip(links, titles):
+
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
+
+        response = requests.get(link, headers=headers)
+        html = response.text
+        soup = BeautifulSoup(html, "html.parser")
+        items = soup.select("#dic_area")
+        summary = soup.select_one(".media_end_summary")
+        if summary is not None:
+            content = summary.text
+
+        content = ''
+
+        for item in items:
+            content += ' ' + item.text
+
+        content = content.replace('\n', '').replace('\t', '')
+        infos[title] = content
+
+    return infos
+
+def bring_recent_news_links_naver_korea(top_n=30):
+    url = "https://news.naver.com/section/101"
 
     headers = {
         "User-Agent": "Mozilla/5.0"
