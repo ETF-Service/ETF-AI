@@ -1,2 +1,4 @@
 chrome-linux64/
 chromedriver-linux64
+
+__pycache__/
