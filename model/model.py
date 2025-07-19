@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 def create_client(api_key, model_type):
     # 클라이언트 설정 (기존 코드와 동일)
     # Clova의 경우 OpenAI API Client 설정이 다름.
-    if model_type == "Clova X":
+    if model_type == "clova-x":
         model_type = "HCX-005"
         client = OpenAI(
             api_key=api_key,
