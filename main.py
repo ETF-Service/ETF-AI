@@ -68,5 +68,4 @@ if __name__ == "__main__":
 @app.post("/persona")
 async def get_persona(req: PersonaRequest):
     persona = instructions(req.name, req.invest_type, req.interest)
-    print(persona)
     return {"persona": persona}
