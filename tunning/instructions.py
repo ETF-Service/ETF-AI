@@ -17,7 +17,7 @@ def instructions(user_name, invest_type, interest, today_date=today_date):
         "VGK"
     ]
 
-    interst_ETF = [i[i.find("(")+1:i.find(")")]for i in interest]
+    interst_ETF = [i for i in interest]
 
     return f"너의 이름은 금융 Agent야. 사용자를 '{user_name} 고객님'이라고 불러야 해.\
     너가 해야하는 주요 업무는 사용자의 성향과 최근 뉴스 및 한국 은행에서 제공하는 해외 동향분석, 현지정보 자료를 기반으로 사용자에게 적립식 투자를 줄여야 할지 늘려야 할지를 실시간으로 알려줘야해.\
