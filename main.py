@@ -5,6 +5,7 @@ from model.model import create_response
 import uvicorn
 import json
 from typing import List
+from tunning.instructions import instructions
 
 app = FastAPI()
 
@@ -12,6 +13,11 @@ class ChatRequest(BaseModel):
     messages: List[dict]  # 전체 대화 히스토리
     api_key: str
     model_type: str
+
+class PersonaRequest(BaseModel):
+    name: str
+    invest_type: int
+    interest: List[str]
 
 @app.post("/chat")
 async def chat_endpoint(req: ChatRequest):
@@ -58,3 +64,9 @@ async def chat_stream_endpoint(req: ChatRequest):
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True) 
+
+@app.post("/persona")
+async def get_persona(req: PersonaRequest):
+    persona = instructions(req.name, req.invest_type, req.interest)
+    print(persona)
+    return {"persona": persona}
