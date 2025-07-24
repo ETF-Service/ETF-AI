@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from model.model import create_response
+from model.model import create_response, analyze_sentiment
 import uvicorn
 import json
 from typing import List
@@ -68,3 +68,21 @@ if __name__ == "__main__":
 async def get_persona(req: PersonaRequest):
     persona = instructions(req.name, req.invest_type, req.interest)
     return {"persona": persona}
+
+@app.post("/analyze")
+async def analyze_endpoint(req: ChatRequest):
+    """투자 분석을 위한 엔드포인트 - analyze_sentiment 함수 사용"""
+    try:
+        # analyze_sentiment 함수 호출
+        analysis_result, updated_messages = analyze_sentiment(req.messages, req.api_key, req.model_type)
+        
+        return {
+            "answer": analysis_result,
+            "success": True
+        }
+    except Exception as e:
+        return {
+            "answer": f"분석 중 오류가 발생했습니다: {str(e)}",
+            "success": False,
+            "error": str(e)
+        }
