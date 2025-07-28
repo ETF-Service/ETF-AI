@@ -10,12 +10,13 @@ from typing import List, Dict, Any
 from tunning.instructions import instructions
 from concurrent.futures import ThreadPoolExecutor
 import logging
+import os
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+app = FastAPI(title="ETF AI Analysis Service", version="1.0.0")
 
 # 병렬 처리를 위한 스레드 풀
 executor = ThreadPoolExecutor(max_workers=10)
@@ -197,6 +198,16 @@ async def batch_analyze_endpoint(req: BatchAnalyzeRequest):
             "processing_time": total_processing_time
         }
 
+@app.get("/")
+async def root():
+    """Railway 헬스체크용 루트 엔드포인트"""
+    return {
+        "message": "ETF AI Analysis Service is running",
+        "status": "healthy",
+        "service": "ETF AI Analysis Service",
+        "version": "1.0.0"
+    }
+
 @app.get("/health")
 async def health_check():
     """AI 서버 상태 확인"""
@@ -208,4 +219,5 @@ async def health_check():
     }
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True) 
+    port = int(os.environ.get("PORT", 8001))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False) 
