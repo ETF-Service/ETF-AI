@@ -219,5 +219,11 @@ async def health_check():
     }
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8001))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False) 
+    port = int(os.environ.get("PORT", 8080))  # Cloud Run 기본 포트는 8080
+    uvicorn.run(
+        "main:app", 
+        host="0.0.0.0", 
+        port=port, 
+        reload=False,
+        log_level="info"
+    ) 
