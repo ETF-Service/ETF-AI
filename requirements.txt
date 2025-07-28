@@ -7,6 +7,14 @@ python-dotenv
 httpx
 numpy
 scikit-learn
+sentence-transformers
 streamlit
-asyncio-coroutine
-concurrent-futures 
+curl-cffi
+beautifulsoup4
+selenium
+webdriver-manager
+PyMuPDF
+yfinance
+requests
+lxml
+pandas 
