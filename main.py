@@ -86,6 +86,7 @@ async def analyze_endpoint(req: ChatRequest):
         
         processing_time = time.time() - start_time
         logger.info(f"✅ AI 분석 완료 ({processing_time:.2f}초)")
+        logger.info(f"✅ AI 분석 결과: {analysis_result}")
         
         return {
             "answer": analysis_result,
@@ -126,6 +127,7 @@ async def batch_analyze_endpoint(req: BatchAnalyzeRequest):
                 
                 single_processing_time = time.time() - single_start_time
                 logger.info(f"✅ 단일 분석 완료 ({single_processing_time:.2f}초)")
+                logger.info(f"✅ AI 분석 결과: {analysis_result}")
                 
                 return {
                     "success": True,

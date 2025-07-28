@@ -169,7 +169,6 @@ def analyze_sentiment(messages, api_key, model_type):
 # 두 문장의 코사인 유사도 확인하는 함수.
 # 허깅페이스 API를 이용함.
 def cosine_sim(sent1, sent2):
-    print(sent2)
     model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
     # 각 문장 인코딩

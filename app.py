@@ -192,7 +192,7 @@ if st.session_state.alarm:
             {
                 "role": "user",
                 "content": f"네이버 글로벌 경제 뉴스, 네이버 한국 경제 뉴스, 한국은행에서 제공하는 정보 3가지를 모두 분석해줘.\
-                            지금 나는 {today_ETF} ETF에 각각 {today_ETF_invest_price}원씩 투자하고 있어. 투자 비율을 조정해야 하는 것이 있어?\
+                            오늘 나는 {today_ETF} ETF에 각각 {today_ETF_invest_price}원씩 투자하는 날이야. 이중에서 투자 비율을 조정해야 하는 것이 있어?\
                             요약만 간결하게 해서 상품에 투자 비중을 정해서 최종 금액을 도출해줘."
             }
         ]
@@ -203,7 +203,7 @@ if st.session_state.alarm:
             # 코사인 유사도 측정
             similarity = cosine_sim(prev_response[-1], response[0])
             # 코사인 유사도가 일정 수준보다 낮게 나온다면 알림 보내기.
-            if similarity < 0.5:
+            if similarity < 0.45:
                 prev_response.append(response)
                 with st.chat_message("assistant"):
                     st.write(response[0])

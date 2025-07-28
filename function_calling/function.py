@@ -280,21 +280,12 @@ def Korea_Bank_News_Text(page=5):
     return infos
 
 def Korea_Bank_News_Links(page=5):
-    # ChromeDriver 경로 명시
-    chromedriver_path = "/usr/local/bin/chromedriver"  # ChromeDriver 경로
-    chrome_path = "/usr/bin/google-chrome"  # Chrome 브라우저 경로
-
-    # Chrome 옵션 설정
     options = Options()
-    options.add_argument("--headless")  # GUI 없이 실행
+    options.add_argument("--headless")
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    options.binary_location = chrome_path  # Chrome 브라우저 경로 설정
 
-    # ChromeDriver 서비스 설정
-    service = Service(chromedriver_path)
-
-    # WebDriver 생성
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     situation_links = []
     direction_links = []
