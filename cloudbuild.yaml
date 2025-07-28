@@ -7,6 +7,7 @@ steps:
       '-f', 'Dockerfile',
       '.'
     ]
+    dir: 'ETF_AI'
 
   # Container Registry에 푸시
   - name: 'gcr.io/cloud-builders/docker'
@@ -20,7 +21,6 @@ steps:
       '--region', 'asia-northeast3',
       '--platform', 'managed',
       '--allow-unauthenticated',
-      '--port', '8001',
       '--memory', '2Gi',
       '--cpu', '1',
       '--timeout', '3600',
