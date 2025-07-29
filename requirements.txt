@@ -9,4 +9,11 @@ numpy==2.3.1
 scikit-learn==1.7.0
 sentence-transformers==5.0.0
 pandas==2.3.1
-requests==2.32.4 
+requests==2.32.4
+curl-cffi==0.12.0
+beautifulsoup4==4.13.4
+selenium==4.18.1
+webdriver-manager==4.0.1
+PyMuPDF==1.24.0
+yfinance==0.2.36
+streamlit==1.32.0 
