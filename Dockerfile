@@ -18,12 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 애플리케이션 코드 복사
 COPY . .
 
-# 헬스체크 추가
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8000}/ping || exit 1
-
 # Railway는 PORT 환경변수를 자동으로 설정
-EXPOSE 8000
+EXPOSE 8001
 
-# Railway용 실행 명령 - 환경변수 PORT 사용
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"] 
+# Railway용 실행 명령 - shell 형식으로 환경변수 확장
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8001} 

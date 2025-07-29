@@ -205,8 +205,7 @@ async def root():
         "message": "ETF AI Analysis Service is running",
         "status": "healthy",
         "service": "ETF AI Analysis Service",
-        "version": "1.0.0",
-        "timestamp": time.time()
+        "version": "1.0.0"
     }
 
 @app.get("/health")
@@ -219,13 +218,8 @@ async def health_check():
         "thread_pool_size": executor._max_workers
     }
 
-@app.get("/ping")
-async def ping():
-    """간단한 핑 엔드포인트 - 헬스체크용"""
-    return {"pong": True, "timestamp": time.time()}
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # Railway 기본 포트는 8000
+    port = int(os.environ.get("PORT", 8001))  # Railway 기본 포트는 8001
     uvicorn.run(
         "main:app", 
         host="0.0.0.0", 
