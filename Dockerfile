@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 8001
 
 # Railway용 실행 명령 - shell 형식으로 환경변수 확장
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8001} 
+CMD uvicorn main:app --host 0.0.0.0 --port 8001 
