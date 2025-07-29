@@ -18,8 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 애플리케이션 코드 복사
 COPY . .
 
-# 포트는 Cloud Run에서 자동으로 설정됨
-EXPOSE 8080
+# Railway는 PORT 환경변수를 자동으로 설정
+EXPOSE 8001
 
-# Cloud Run은 PORT 환경변수를 자동으로 설정
-CMD exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080} 
+# Railway용 실행 명령
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"] 
